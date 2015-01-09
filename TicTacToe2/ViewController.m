@@ -21,6 +21,11 @@
 @property (strong, nonatomic) IBOutlet UILabel *nowPlayerOne;
 @property (strong, nonatomic) IBOutlet UILabel *nowPlayerTwo;
 
+@property BOOL player1;
+
+@property CGPoint xOriginalCenter; //store initial X position (for animation)
+@property CGPoint oOriginalCenter;  //store initial O position (for animation)
+
 @end
 
 @implementation ViewController
@@ -28,75 +33,73 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    // Do any additional setup after loading the view, typically from a nib.
-    
+    self.player1 = TRUE;  // first turn is Player's 1 turn
+    self.xOriginalCenter = self.nowPlayerOne.center; // storing initial X position
+    self.oOriginalCenter = self.nowPlayerTwo.center; // storing initial O position
 }
 
 - (IBAction)panHandler:(UIPanGestureRecognizer *)gesture
 {
-    CGPoint touchPoint1 = [gesture locationInView:self.view];
-    self.nowPlayerOne.center = touchPoint1;
+    CGPoint touchPoint = [gesture locationInView:self.view]; //using a single touchPoint
     
-    if (CGRectContainsPoint(self.labelOne.frame, self.nowPlayerOne.center))
+    if (self.player1) // if it's player 1 turn, do this...
     {
-        self.labelOne.text = @"X";
-        self.labelOne.textColor = [UIColor blueColor];
+        self.nowPlayerOne.center = touchPoint;
+    
+        if (CGRectContainsPoint(self.labelOne.frame, self.nowPlayerOne.center))
+        {
+            self.labelOne.text = @"X";
+            self.labelOne.textColor = [UIColor blueColor];
+            self.player1 = FALSE; //as soon as the label changed, we want to start the second player's turn.
+
+        }
+    
+        if (CGRectContainsPoint(self.labelTwo.frame, self.nowPlayerOne.center))
+        {
+            self.labelTwo.text = @"X";
+            self.labelTwo.textColor = [UIColor blueColor];
+            self.player1 = FALSE; //as soon as the label changed, we want to start the second player's turn.
+
+        }
+    
+        if (CGRectContainsPoint(self.labelThree.frame, self.nowPlayerOne.center))
+        {
+            self.labelThree.text = @"X";
+            self.labelThree.textColor = [UIColor blueColor];
+            self.player1 = FALSE; //as soon as the label changed, we want to start the second player's turn.
+        }
     }
-    
-    if (CGRectContainsPoint(self.labelTwo.frame, self.nowPlayerOne.center))
+    else if (gesture.state == UIGestureRecognizerStateEnded) // if it's not the first player turn AND the pan gesture ended, do this...
     {
-        self.labelTwo.text = @"X";
-        self.labelTwo.textColor = [UIColor blueColor];
-    }
-    
-    if (CGRectContainsPoint(self.labelThree.frame, self.nowPlayerOne.center))
-    {
-        self.labelThree.text = @"X";
-        self.labelThree.textColor = [UIColor blueColor];
+        // same as the code above but to the "o" label and player2
+         self.nowPlayerTwo.center = touchPoint;
+
+        if (CGRectContainsPoint(self.labelOne.frame, self.nowPlayerTwo.center))
+
+        {
+            self.labelOne.text = @"O";
+            self.labelOne.textColor = [UIColor redColor];
+            self.player1 = TRUE;
+
+        }
+
+        if (CGRectContainsPoint(self.labelTwo.frame, self.nowPlayerTwo.center))
+        {
+            self.labelTwo.text = @"O";
+            self.labelTwo.textColor = [UIColor redColor];
+            self.player1 = TRUE;
+
+        }
+
+        if (CGRectContainsPoint(self.labelThree.frame, self.nowPlayerTwo.center))
+
+        {
+            self.labelThree.text = @"O";
+            self.labelThree.textColor = [UIColor redColor];
+            self.player1 = TRUE;
+            
+        }
     }
 }
-
-- (IBAction)panHandler2:(UIPanGestureRecognizer *)gesture2
-{
-    CGPoint touchPoint2 = [gesture2 locationInView:self.view];
-    self.nowPlayerTwo.center = touchPoint2;
-
-    if (CGRectContainsPoint(self.labelOne.frame, self.nowPlayerTwo.center))
-    
-    {
-        self.labelOne.text = @"O";
-        self.labelOne.textColor = [UIColor redColor];
-    }
-    
-    if (CGRectContainsPoint(self.labelTwo.frame, self.nowPlayerTwo.center))
-    {
-        self.labelTwo.text = @"O";
-        self.labelTwo.textColor = [UIColor redColor];
-    }
-    
-    if (CGRectContainsPoint(self.labelTwo.frame, self.nowPlayerTwo.center))
-    {
-        self.labelTwo.text = @"O";
-        self.labelTwo.textColor = [UIColor redColor];
-    }
-    
-    if (CGRectContainsPoint(self.labelThree.frame, self.nowPlayerTwo.center))
-    
-    {
-        self.labelThree.text = @"O";
-        self.labelThree.textColor = [UIColor redColor];
-    }
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-}
-    
 
 @end
